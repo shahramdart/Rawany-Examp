@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تاقیکردنەوەی بیرەوەری</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-100 to-blue-200 min-h-screen p-6 font-sans text-right">
+
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-2xl">
+    <h1 class="text-3xl font-bold text-center text-green-700 mb-6">🧠 تاقیکردنەوەی بیرەوەری</h1>
+    <p class="text-center text-gray-600 mb-10">بەوەڵامدان بە ٢٠ پرسیار، ئاستی بیرەوەرییەکەت بدۆزەوە</p>
+
+    <form id="quizForm" class="space-y-8">
+      <!-- Questions will be inserted by JS -->
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white text-lg py-3 px-6 rounded-xl w-full shadow-md transition duration-300">
+        ✅ نمرەکان هەژمێر بکە
+      </button>
+    </form>
+
+    <div id="result" class="mt-10 text-xl font-bold text-center text-green-800"></div>
+
+    <div class="mt-8 text-center">
+      <a href="index.html" class="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-xl transition duration-300">
+        🔙 گەڕانەوە بۆ سەرەتا
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "١. لە خەمی یادەوەری خۆمم .",
+      "٢. پێدەچێت یادەوەریم لەزۆربەی کەسانی هاوتەمەنی خۆم خراپتر بێت.",
+      "٣. ئەگەر شتێک گرنگ بێت ڕەنگە لەبیرم بێت .",
+      "٤. زۆر جار چاوپێکەوتنەکانم لە بیر دەچێت ئەگەر کەسێکی تر یان بیرخستنەوەیەک هانم نەدات.",
+      "٥. ئەگەر بابەتێک بخوێنمەوە کێشەم هەیە لە بیر هێنانەوەی وردەکارییەکانی دواتر لەو ڕۆژەدا.",
+      "٦. زۆرجار ئامێری ئاگادارکردنەوە یان یادەوەری بۆ ئەوشتانە دروست دەکەم کە دەمەوێت لەبیرم بێت.",
+      "٧. لەگفتووگۆدا بە دەگمەن کێشەم هەیە لە هاتنەپێشەوەی ئەو وشە تایبەتەی کە دەمەوێت.",
+      "٨. زۆر جار شکست دەهێنم لە بیر هێنانەوەی ئەوشتانەی کە لە چەند ڕۆژی ڕابردوودا بەسەرم هاتووە.",
+      "٩. زۆر جار لەبیرم دەچێتەوە بۆ چی لە بە شێکی ماڵەوە بۆ بە شێکی تر چووم.",
+      "١٠. بە مەبەست بە تووندی سەرنجم لەسەر شتێکە بۆ ئەوەی لەبیرم بێت.",
+      "١١. بە بەراورد لەگەڵ پێنج ساڵ لەمەوبەر ئێستا یادەوەریم زۆر خراپترە.",
+      "١٢. زۆرجار بیر هێنانەوەی ناو ،دەموچاو ، یان کاتەکانی چاوپێکەوتن کێشەیەک بۆ من دروست دەکات.",
+      "١٣. کاتێک کتێبێک دەخوێنمەوە، زۆر جار کێشەم هەیە لەوەی ئەوەی تازە خوێندومەوەتەوە بیرم بێتەوە.",
+      "١٤. دوای ناسینی خەڵک ناوی خەڵکم لەبیر دەچێتەوە.",
+      "١٥. کاتێک هەوڵدەدەم شتێکم بەبیر بهێنمەوە زۆر جار هەست دەکەم لەسەر زمانم بێت، بەڵام ناتوانم دەری بڕم.",
+      "١٦. ئەوشتانەی کە تازە کڕیومە وەک چاویلکە یا ئامێر بەهەڵە بەکاری دە‌ێنم.",
+      "١٧. زۆر جار بەروارە گرنگەکانم لە بیر دەچێتەوە، وەک ڕۆژی لەدایکبوون یان ساڵڕۆژەکان.",
+      "١٨. دەتوانم بە ڕوونی ڕووداوەکانی ڕابردووی دوورم بە بیر بهێنمەوە.",
+      "١٩. تێبینی کەمبوونەوەی توانای بیر هێنانەوەی ڕووداوەکانی ئەم دواییەم کردووە.",
+      "٢٠. متمانەم بە توانا گشتییەکانی بیرەوەریم هەیە."
+    ];
+
+    const options = [
+      "بە توندی ناڕازیم",
+      "ناڕازیم",
+      "تا ڕاددەیەک ڕازیم",
+      "ڕازیم",
+      "بە توندی ڕازیم"
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("quizForm");
+
+      questions.forEach((question, index) => {
+        const qNum = index + 1;
+        const container = document.createElement("div");
+        container.className = "bg-gray-50 p-4 rounded-xl shadow-sm border";
+
+        const label = document.createElement("p");
+        label.className = "font-semibold text-gray-800 mb-3";
+        label.textContent = question;
+        container.appendChild(label);
+
+        const optionWrapper = document.createElement("div");
+        optionWrapper.className = "space-y-2";
+
+        options.forEach((opt, val) => {
+          const optLabel = document.createElement("label");
+          optLabel.className = "flex justify-end items-center space-x-2 space-x-reverse cursor-pointer text-gray-700";
+          optLabel.innerHTML = `
+            <span>${opt}</span>
+            <input type="radio" name="q${qNum}" value="${val}" required class="form-radio h-4 w-4 text-green-600 ml-2" />
+          `;
+          optionWrapper.appendChild(optLabel);
+        });
+
+        container.appendChild(optionWrapper);
+        form.insertBefore(container, form.lastElementChild);
+      });
+    });
+
+    const form = document.getElementById('quizForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      let total = 0;
+      const formData = new FormData(form);
+      for (let value of formData.values()) {
+        total += parseInt(value);
+      }
+
+      let message = '';
+      if (total <= 34) {
+        message = '📘 ئاستی بیرەوەری: نایاب';
+      } else if (total <= 49) {
+        message = '📗 ئاستی بیرەوەری: باشە';
+      } else if (total <= 70) {
+        message = '📒 ئاستی بیرەوەری: پەسەندە';
+      } else if (total <= 85) {
+        message = '📕 ئاستی بیرەوەری: لاوازە';
+      } else {
+        message = '🔴 بیرەوەریت زۆر لاوازە، تکایە پزیشکێک ببینە.';
+      }
+
+      resultDiv.innerHTML = `
+        <div class="bg-green-100 border border-green-300 text-green-800 rounded-xl p-5 shadow-md">
+          نمرەی گشتی: <span class="text-2xl font-bold">${total}</span><br/>
+          ${message}
+        </div>`;
+    });
+  </script>
+</body>
+</html>

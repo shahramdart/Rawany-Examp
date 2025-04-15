@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تاقیکردنەوەی سترێس</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen p-6 font-sans text-right">
+
+  <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-2xl">
+    <h1 class="text-3xl font-bold text-center text-purple-700 mb-6">🧠 تاقیکردنەوەی سترێس</h1>
+    <p class="text-center text-gray-600 mb-10">بەوەڵامدان بە ٢٠ پرسیار، نمرەی سترێسەکەت بدۆزەوە</p>
+
+    <form id="quizForm" class="space-y-8">
+      <!-- Questions will be inserted by JS -->
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white text-lg py-3 px-6 rounded-xl w-full shadow-md transition duration-300">
+        ✅ نمرەکان هەژمێر بکە
+      </button>
+    </form>
+
+    <div id="result" class="mt-10 text-xl font-bold text-center text-purple-800"></div>
+
+    <!-- Back Button -->
+    <div class="mt-10 text-center">
+      <a href="index.html" class="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-6 rounded-xl shadow transition duration-300">
+        🔙 گەڕانەوە بۆ سەرەتا
+      </a>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      "١. هەست دەکەم زۆرشتم هەیە کە بیکەم.",
+      "٢. من بەزۆری توڕە وتووندم.",
+      "٣. زۆر جار خۆم لە دۆخی ململانێدا دەبینمەوە.",
+      "٤. بەگشتی کاتم هەیە بۆ تەواو کردنی کارەکانم.",
+      "٥. بەهۆی سترێسەوە تووشی گرژی جەستەی یان ناڕەحەتی دەبم.",
+      "٦. بەم دواییە گۆڕانکارییەکی گەورەی پیشەم ئەزموون کرد.",
+      "٧. بەگشتی هەست بە ئارامی دەکەم.",
+      "٨. هاست دەکەم قورسایی بەر پرسیارێتیم لەسەرە.",
+      "٩. ئارامی و ئارامگرتنم بەزە حمەتە.",
+      "١٠. هەست بە ماندوێتی دەروونی دەکەم.",
+      "١١. لەم دواییانەدا تووشی پاشەکشە و شکستی گەورە بووم.",
+      "١٢. بڕیارەکانم زۆرن کە دەبێ بیدەم.",
+      "١٣. بەهۆی کارەوە زەحمەتە کات بدۆزمەوە بۆ ئەوەی لەگەڵ خێزان و هاوڕێکانم بم.",
+      "١٤. من بە بەردەوانی مامەڵە لەگەڵ کەسانی سەخت دەکەم.",
+      "١٥. زۆر جار هەست دەکەم کە داواکارییەکانی ژیانی ڕۆژانەم زەق بووەتەوە.",
+      "١٦. من کات بۆ چالاکیە وەرزشییەکان لەدەرەوەی کار دەدۆزمەوە.",
+      "١٧. پێدەچێت کێشەکانم کەڵەکەبن.",
+      "١٨. هەست بە فشار دەکەم بە هۆی وادەکانەوە.",
+      "١٩. لەم دواییانە دا گۆڕانکاری گەورەم لە دۆخی دارایی خۆمدا ئەزموون کرد.",
+      "٢٠. لەکاتی بەتاڵیدا بیر لەکار دەکەمەوە."
+    ];
+
+    const options = [
+      "بە توندی ناڕازیم",
+      "ناڕازیم",
+      "تا ڕاددەیەک ڕازیم",
+      "ڕازیم",
+      "بە توندی ڕازیم"
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("quizForm");
+
+      questions.forEach((question, index) => {
+        const qNum = index + 1;
+        const container = document.createElement("div");
+        container.className = "bg-gray-50 p-4 rounded-xl shadow-sm border";
+
+        const label = document.createElement("p");
+        label.className = "font-semibold text-gray-800 mb-3";
+        label.textContent = question;
+        container.appendChild(label);
+
+        const optionWrapper = document.createElement("div");
+        optionWrapper.className = "space-y-2";
+
+        options.forEach((opt, val) => {
+          const optLabel = document.createElement("label");
+          optLabel.className = "flex justify-end items-center space-x-2 space-x-reverse cursor-pointer text-gray-700";
+          optLabel.innerHTML = `
+            <span>${opt}</span>
+            <input type="radio" name="q${qNum}" value="${val}" required class="form-radio h-4 w-4 text-purple-600 ml-2" />
+          `;
+          optionWrapper.appendChild(optLabel);
+        });
+
+        container.appendChild(optionWrapper);
+        form.insertBefore(container, form.lastElementChild);
+      });
+    });
+
+    const form = document.getElementById('quizForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      let total = 0;
+      const formData = new FormData(form);
+      for (let value of formData.values()) {
+        total += parseInt(value);
+      }
+
+      let message = '';
+      if (total <= 20) {
+        message = '📘 ئاستی سترێس: کەمترین';
+      } else if (total <= 40) {
+        message = '📙 ئاستی سترێس: ناوازە';
+      } else if (total <= 60) {
+        message = '📕 ئاستی سترێس: زۆر';
+      } else {
+        message = '🔴 سترێسێکی توندت هەیە، تکایە ڕووناکی بگرە.';
+      }
+
+      resultDiv.innerHTML = `
+        <div class="bg-purple-100 border border-purple-300 text-purple-800 rounded-xl p-5 shadow-md">
+          نمرەی گشتی: <span class="text-2xl font-bold">${total}</span><br/>
+          ${message}
+        </div>`;
+    });
+  </script>
+</body>
+</html>
